@@ -5,6 +5,7 @@
 import { UserLayout } from './UserLayout';
 import { UserDetail } from '../pages/UserDetail';
 import UserAccount from '../pages/UserAccount';
+import Login from '../pages/Login';
  
 const Navigator = () => {
   return (
@@ -15,6 +16,7 @@ const Navigator = () => {
             <Route path='detail' element={<UserDetail/>}/>
             <Route path='account' element={<UserAccount/>}/>
         </Route>
+        <Route path='/login' element={<Login/>}/>
         <Route path='*' element={<NotFound/>}/>
         
     </Routes>

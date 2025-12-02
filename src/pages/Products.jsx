@@ -1,6 +1,8 @@
 import Card from "../components/Card"
 import Loading from "../components/loading"
 import { useState,useEffect } from "react"
+import { useDarkMode } from "../stores/store"
+
 
 const Products = () => {
 
@@ -8,6 +10,7 @@ const Products = () => {
   const [loading,setLoading] = useState(false)
   const [text,setText] = useState("")
   const [products,setProducts] = useState([])
+  const {isDrakModeEnable,toggleDarkmode} = useDarkMode()
  
   const getProducts =async () =>{
     try {
@@ -36,15 +39,17 @@ const Products = () => {
  
   return (
     <>
-    <div className="flex justify-center mt-3">
-    <input className="border w-[300px] p-2  rounded-sm " placeholder="search products" onChange={e => setText(e.target.value)} value={text} type="text" />
+    <div className={`${isDrakModeEnable?"bg-blue-950":"bg-white"} transition-all duration-200 h-full`}>
+    <div className="w-full flex justify-center py-5">
+    <input className= {`${isDrakModeEnable ? " text-white" : "text-black"} borber border-zinc-300 p-3 min-w-[300px]`} placeholder="search products" onChange={e => setText(e.target.value)} value={text} type="text" />
+    <button onClick={toggleDarkmode} className="bg-red-600 px-2 text-white rounded-sm ">{isDrakModeEnable ?"Disable Darkmode" :"Enable Darkmode"}</button>
     </div>
-    
- {  
-     loading? <Loading/> : <div className='w-full h-screen  grid grid-cols-4 gap-5 p-5' >
+  
+    {  
+     loading? <Loading/> : <div className='w-full h-full  grid grid-cols-4 gap-5 p-5' >
         {products.length ? products.map(product => <Card product={product}/>):"No products found"}
     </div>
-    }
+    }  </div>
     </>
   )
 }
