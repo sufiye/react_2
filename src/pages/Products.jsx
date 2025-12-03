@@ -1,55 +1,55 @@
-import Card from "../components/Card"
-import Loading from "../components/loading"
-import { useState,useEffect } from "react"
-import { useDarkMode } from "../stores/store"
 
+import { useState,useEffect } from 'react'
+import Card from '../components/Card'
+import Loading from '../components/Loading'
+import { useDarkmode } from '../stores/store'
 
 const Products = () => {
-
-  
-  const [loading,setLoading] = useState(false)
-  const [text,setText] = useState("")
+  const[searchterm,setSearchterm] = useState("")
   const [products,setProducts] = useState([])
-  const {isDrakModeEnable,toggleDarkmode} = useDarkMode()
- 
-  const getProducts =async () =>{
-    try {
-      setLoading(true)
-      const res = await fetch(text.length >= 2 ? `https://ilkinibadov.com/api/v1/search?searchterm=${text}`:"https://ilkinibadov.com/api/v1/products")
-      if (res.ok) {
-        
+  const [loading,setLoading] = useState(false)
+  const {toggleDarkmode,isDarkmodeEnabled} = useDarkmode()
+
+const getProducts = async ()=>{
+  try {
+    setLoading(true)
+    const res = await fetch(searchterm.length >=3 ?`https://ilkinibadov.com/api/v1/search?searchterm=${searchterm}`: "https://ilkinibadov.com/api/v1/products")
+
+    if (res.ok) {
         const data = await res.json()
-        console.log(data);
-        
-        setProducts(text.length >= 2 ? data.content : data.products)
-       
-      }
+        setProducts(searchterm.length >=3 ?data.content: data.products)
+    }
 
-    } catch (error) {
-      console.error(error)
-    }
-    finally{
-      setLoading(false)
-    }
+  } catch (error) {
+    console.error(error)
   }
+  finally{
+    setLoading(false)
+  }
+}
 
- useEffect(()=>{
+useEffect(()=>{
   getProducts()
- },[text])
- 
+},[searchterm])
+
+
   return (
+
     <>
-    <div className={`${isDrakModeEnable?"bg-blue-950":"bg-white"} transition-all duration-200 h-full`}>
-    <div className="w-full flex justify-center py-5">
-    <input className= {`${isDrakModeEnable ? " text-white" : "text-black"} borber border-zinc-300 p-3 min-w-[300px]`} placeholder="search products" onChange={e => setText(e.target.value)} value={text} type="text" />
-    <button onClick={toggleDarkmode} className="bg-red-600 px-2 text-white rounded-sm ">{isDrakModeEnable ?"Disable Darkmode" :"Enable Darkmode"}</button>
+    <div className={`${isDarkmodeEnabled ? "bg-gray-900":"bg-white" } transition-all duration-400 `}>
+   
+    <div className='w-full flex justify-center gap-2 py-5 '>
+     <input className={`${isDarkmodeEnabled? "placeholder:text-white text-white ":"placeholder:text-zinc-500 text-black"} border-2 border-zinc-300 p-3 rounded-sm min-w-[300px]`} placeholder='Search for any product...' value={searchterm} type="text" onChange={(e)=>{
+        setSearchterm(e.target.value)
+      }} />
+      <button className='bg-cyan-900 text-white rounded-sm px-2 just' onClick={toggleDarkmode}>{isDarkmodeEnabled ?"Disable Darkmode":" Enable Darkmode"}</button>
     </div>
-  
-    {  
-     loading? <Loading/> : <div className='w-full h-full  grid grid-cols-4 gap-5 p-5' >
-        {products.length ? products.map(product => <Card product={product}/>):"No products found"}
+
+    {loading ? <Loading/>:<div className='w-full h-full grid grid-cols-4 gap-5 p-5'>
+      {products.length ? products.map(product =>  <Card product={product}/>):"No products"}
+    </div>}
+    
     </div>
-    }  </div>
     </>
   )
 }

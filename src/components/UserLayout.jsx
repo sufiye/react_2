@@ -1,10 +1,12 @@
+import { Outlet } from 'react-router-dom';
 
-import { Outlet } from 'react-router-dom'
-
-export const UserLayout = () => {
-  return (
-    <div>UserLayout
-        <Outlet/>
-    </div>
-  )
+const UserLayout = () => {
+    return (
+        <div>
+            <h2>User Dashboard</h2>
+            <Outlet /> {/* Child routes will render here */}
+        </div>
+    );
 }
+
+export default UserLayout;
