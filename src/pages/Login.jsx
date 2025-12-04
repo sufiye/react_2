@@ -1,7 +1,7 @@
 import {useState } from "react"
 import { useTokens } from "../stores/tokenStore"
 import { useDarkmode } from "../stores/store"
-
+import axios from "axios"
 
 const Login = () => {
     const {setAccessToken ,setRefreshToken} = useTokens()
@@ -17,21 +17,15 @@ const Login = () => {
 
     const handleLogin = async ()=>{
         try {
-            const res = await fetch(`https://ilkinibadov.com/api/v1/auth/login`,{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify(formData)
-            })
-            if (res.ok) {
-                
-                const data = await res.json()
-                console.log(data);
-                setAccessToken(data.accessToken)
-                setRefreshToken(data.refreshToken)
-                
-            }
+       const {data, statusText} = await axios.post("https://ilkinibadov.com/api/v1/auth/login",formData,{
+        headers: {
+            "Content-Type": "application/json"
+        }
+       })
+       if (statusText === 'OK') {
+        setAccessToken(data.accessToken)
+        setRefreshToken(data.refreshToken)
+       }
 
 
         } catch (error) {

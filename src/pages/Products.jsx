@@ -1,31 +1,25 @@
 
 import { useState,useEffect } from 'react'
 import Card from '../components/Card'
-import Loading from '../components/Loading'
 import { useDarkmode } from '../stores/store'
+import api from "../utils/axios"
+
 
 const Products = () => {
   const[searchterm,setSearchterm] = useState("")
   const [products,setProducts] = useState([])
-  const [loading,setLoading] = useState(false)
   const {toggleDarkmode,isDarkmodeEnabled} = useDarkmode()
 
-const getProducts = async ()=>{
-  try {
-    setLoading(true)
-    const res = await fetch(searchterm.length >=3 ?`https://ilkinibadov.com/api/v1/search?searchterm=${searchterm}`: "https://ilkinibadov.com/api/v1/products")
-
-    if (res.ok) {
-        const data = await res.json()
-        setProducts(searchterm.length >=3 ?data.content: data.products)
+  const getProducts = async () => {
+    try {
+        const { data, statusText } = await api.get(searchterm.length >= 3 ? `https://ilkinibadov.com/api/v1/search?searchterm=${searchterm}` : "https://ilkinibadov.com/api/v1/products")
+        console.log(data)
+        if (statusText === "OK") {
+            setProducts(searchterm.length >= 3 ? data.content : data.products)
+        }
+    } catch (error) {
+        console.error(error)
     }
-
-  } catch (error) {
-    console.error(error)
-  }
-  finally{
-    setLoading(false)
-  }
 }
 
 useEffect(()=>{
@@ -45,9 +39,9 @@ useEffect(()=>{
       <button className='bg-cyan-900 text-white rounded-sm px-2 just' onClick={toggleDarkmode}>{isDarkmodeEnabled ?"Disable Darkmode":" Enable Darkmode"}</button>
     </div>
 
-    {loading ? <Loading/>:<div className='w-full h-full grid grid-cols-4 gap-5 p-5'>
+   <div className='w-full h-full grid grid-cols-4 gap-5 p-5'>
       {products.length ? products.map(product =>  <Card product={product}/>):"No products"}
-    </div>}
+    </div>
     
     </div>
     </>
